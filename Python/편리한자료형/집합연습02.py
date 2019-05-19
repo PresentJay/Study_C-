@@ -1,0 +1,5 @@
+#빈 집합을 생성하는 방법 = set()
+st3 = set()
+print('st3 :',st3, type(st3))
+st3.add(11)
+print('st3 :',st3)
