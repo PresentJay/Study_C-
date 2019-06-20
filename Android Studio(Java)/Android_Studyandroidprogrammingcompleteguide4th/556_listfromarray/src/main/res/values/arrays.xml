@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="country">
+        <item>조선8</item>
+        <item>조선7</item>
+        <item>조선6</item>
+        <item>조선5</item>
+        <item>조선4</item>
+        <item>조선3</item>
+        <item>조선2</item>
+        <item>조선1</item>
+        <item>조선81</item>
+        <item>조선811</item>
+        <item>조선812</item>
+        <item>조선813</item>
+        <item>조선814</item>
+    </string-array>
+</resources>
