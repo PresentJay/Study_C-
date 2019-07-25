@@ -208,7 +208,7 @@ img{max-width:100%; height: auto; }
     position: relative;
     top: 0;
     left: 0;
-    display: block;
+    /* display: block; */
     margin-left: auto;
     margin-right: auto;
 }
@@ -292,11 +292,9 @@ img{max-width:100%; height: auto; }
     /* color: transparent; */
     border: none;
     outline: none;
-    background: url(img/list_16.png);
+    background: url(bin/img/leftArrow.png);
 }
-
-.slick-next{background: url(img/list_19.png)}
-
+.slick-next{background: url(bin/img/rightArrow.png)};
 .slick-prev
 {
     left: -100px;
