@@ -8,107 +8,149 @@
     <!-- <link rel="stylesheet" href="css/slick.css">
     <link rel="stylesheet" href="css/slick-theme.css"> -->
     <style type="text/css">
-        * {
+        .contents {
             box-sizing: border-box;
             background: black;
         }
 
 
         .regular {
-            left:150px;
-            width: 100%;
+            width: 100% - 150px;
+            left: 150px;
+            margin: 4px;
         }
 
-        .regular .slick-slide{
-            width: 300px;
-            height: 300px;
+        .regular .slider {
+            margin: 900px auto;
         }
 
-        .center .slick-slide{
-            width: 100px;
-            height: 100px;
+        .center .slider {
+            margin: 300px auto;
         }
 
-        .regular img{
-            width: 300px;
-            height: 300px;
+
+        .regular .slick-slide {
+            width: 900px;
+            height: 600px;
+            margin: 4px;
         }
 
-        .regular .slick-track{height: 300px;overflow:hidden;}
-        .center .slick-track{height: 100px;overflow:hidden;}
-
-
-        .center img{
-            width: 100px;
-            height: 100px;
+        .regular img {
+            width: 900px;
+            height: 600px;
         }
+
+        .regular .slick-track {
+            width: 100% - 150px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .center .slick-track {
+            height: 200px;
+            left: 17%;
+            overflow: hidden;
+        }
+
+
 
         .regular .slick-current {
             opacity: 1;
-            width: 300px !important;
-            height: 300px !important;
-            margin: 0 7px;
-            align-self: center;
+            width: 900px !important;
+            height: 600px !important;
+            margin: 4px;
         }
 
         .regular .slick-active {
-            opacity: 1;
+            /* opacity: 1; */
+            width: 900px !important;
+            height: 600px !important;
+            margin: 4px;
+        }
+
+
+        /* 
+        .regular .slick-slide .slick-cloned {
+            width: 900px !important;
+            height: 600px !important;
+        } */
+
+        .center {
+            width: 100%;
+            margin: 4px;
+        }
+
+        .center .slick-slide {
             width: 300px !important;
-            height: 300px !important;
-            margin: 0 7px;
-            align-self: center;
+            height: 200px;
+            margin: 4px;
         }
 
-        .regular .slick-current>div {
-            margin: 0 !important
+        .center img {
+            width: 300px;
+            height: 200px;
         }
-
-        .regular .slick-current div div {
-            width: 300px !important;
-            height: 300px !important;
-        }
-
-        
 
         .center .slick-current {
             opacity: 1;
-            width: 100px !important;
-            height: 100px !important;
-            margin: 0 7px;
-        }
-
-        .center .slick-active {
-            opacity: 1;
-            width: 100px !important;
-            height: 100px !important;
-            margin: 0 7px;
+            width: 300px !important;
+            height: 200px !important;
+            margin: 4px;
             align-self: center;
         }
 
-        .center .slick-current>div {
-            margin: 0 !important
+        .center .slick-track .slick-slide .slick-active {
+            /* opacity: 1; */
+            width: 300px;
+            height: 200px;
+            margin: 4px;
+            align-self: center;
         }
 
-        .center .slick-current div div {
-            width: 100px !important;
-            height: 100px !important;
+        .center .slick-track .slick-slide.slick-active:not(.slick-current) {
+            width: 300px !important;
+            height: 200px !important;
+            margin: 4px;
         }
 
+        .center .slick-slide.slick-cloned {
+            width: 300px !important;
+            height: 200px;
+            margin: 4px;
+        }
+
+        .center .slick-track .slick-slide .slick-cloned {
+            width: 300px;
+            height: 200px;
+            margin: 4px;
+        }
+
+        .center .slick-track .slick-slide {
+            width: 300px;
+            margin: 4px;
+        }
+
+
+
+        .btn-large {
+            margin: 5px;
+        }
 
 
         /* Arrows */
         .slick-prev,
         .slick-next {
-            top: 45%;
-            transform: translate(0, -50%);
+            top: 45% !important;
+            transform: translate(0, -30%);
+
         }
 
         .slick-prev {
-            left: 0px;
+            left: -50px;
         }
 
         .slick-next {
-            right: 0px;
+            right: 270px;
         }
     </style>
 
@@ -151,6 +193,22 @@
                 </div>
             </div>
 
+            <div id="ex2" class="modal">
+                <section class="final slider">
+                </section>
+
+                <div style="text-align: center; max-width: 0auto;">
+                    <a href="#" class="download-btn">
+                        <div class="btn-large">DOWNLOAD</div>
+                    </a>
+                    <a href="#" class="close-slide">
+                        <div class="btn-large">CLOSE</div>
+                    </a>
+                </div>
+            </div>
+
+            
+
         </div>
 
         <div style="text-align: center; max-width: 0auto;">
@@ -158,7 +216,7 @@
             <a class="add-slide" title="스크린샷 촬영">
                 <div class="btn-large">스크린샷</div>
             </a>
-            <a id="album" data-modal>
+            <a href="ex1" data-modal>
                 <div class="btn-large">앨범</div>
             </a>
 
@@ -189,7 +247,6 @@
 
     $('a[data-modal]').click(function (event) {
         $(this).modal();
-
         return false;
     })
 
