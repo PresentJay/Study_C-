@@ -1,0 +1,526 @@
+<!-- **************************************************
+@data      2019.07 ~ 2019.08
+@author    ETRI < bdsong@etri.re.kr> 
+@intern    김형진(YBNML), 정현재
+@version   1 > 2  (2019-07-30)
+@brief     hand motion display & video control with leap motion      
+*************************************************** -->
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <!-- 페이지 로딩속도 향상을 위해, css import는 head 초반부, script import는 body 최후반부로 정리했습니다 *190731 PresentJay -->
+
+    <!-- video.js Dash -->
+    <link href="./libs/_osl/videojs/video-js.min.css" rel="stylesheet">
+    <link href="./libs/skin/vsg-skin.css" rel="stylesheet">
+    <!-- 개발 라이브러리 -->
+    <link href="./css/cePlayer.css" rel="stylesheet">
+    <!-- 테스트화면 스타일 시트 -->
+    <link rel="stylesheet" type="text/css" href="page.css" />
+    <!-- YBNML -->
+    <link rel="stylesheet" type="text/css" href="./css/jquery.toast.css" />
+    <!-- 현재쓰 추가 -->
+    <link rel="stylesheet" href="css/jquery.modal.min.css">
+    <link rel="stylesheet" href="css/swiper.min.css">
+
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+        }
+
+        .swiper-container {
+            width: 100%;
+            padding: 30px;
+        }
+
+        .swiper-slide {
+            text-align: center;
+        }
+
+        .gallery-top {
+            width: 95%;
+            padding: 20px;
+        }
+
+        .gallery-thumbs {
+            height: 20%;
+            padding: 20px;
+        }
+
+        .gallery-top .swiper-slide img {
+            max-width: 70%;
+            max-height: 70%;
+        }
+
+        .gallery-thumbs .swiper-slide img {
+            /* max-width: 25%;
+            max-height: 25%; */
+            width: 100%;
+            opacity: .4;
+        }
+
+        .gallery-thumbs .swiper-slide-thumb-active img {
+            opacity: 1;
+        }
+
+        .slideshow .swiper-slide img {
+            width: 100%;
+        }
+
+
+        input:checked+.T_slider.T_togle {
+            background-color: #2196F3;
+        }
+
+        input:focus+.T_slider.T_togle {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.T_slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px)
+        }
+
+        .T_slider.T_round {
+            border-radius: 34px;
+        }
+
+        .T_slider.T_round:before {
+            border-radius: 50%;
+        }
+
+        #modal-slideshow {
+            width: 70%;
+            height: 70%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!------------------>
+    <!-- 실제 화면부분 -->
+    <!------------------>
+
+    <div class="content">
+        <div class="logo">
+            <!-- 플레이 화면 상단부 로고  *Jay -->
+            <img src="img/main_03.png" alt="Etri 한국전자통신연구원 부산광역시">
+        </div>
+
+        <div class="medi">
+            <!-- 플레이어 (화면 중심부) *Jay -->
+            <video id="CONTENTS" onplay="playVideo()" onended="Video_Start2End = false;"></video>
+            <!---09.28 -->
+            <div id="div_leap">
+                <canvas id="leap-overlay"></canvas>
+            </div>
+        </div>
+
+        <div style="text-align: center; max-width: 0auto;" style="margin-bottom: 15px">
+            <!-- Interacion Toggle Switch -->
+            <label class="T_switch">
+                <input id="Ttoggle" type="checkbox">
+                <span class="T_slider T_togle T_round" onclick="toggle()"></span>
+            </label>
+            <br><br>
+            <!-- 목록 버튼 *Jay-->
+            <a onmousedown="parent.goList()" title="list로 이동">
+                <div class="btn-large">목록</div>
+            </a>
+            <!-- 스크린샷 버튼 *Jay-->
+            <a class="add-slide" title="스크린샷 촬영" onclick=DoSnapshot()>
+                <div class="btn-large">스크린샷</div>
+            </a>
+            <a href="#modal-album">
+                <div onclick="openAlbum()" class="btn-large">앨범</div>
+            </a>
+            <br><br>
+        </div>
+        <br>
+    </div>
+
+
+    <!--------------------->
+    <!-- 보이지 않는 부분 -->
+    <!--------------------->
+
+    <!-- 립모션 정보영역 -->
+    <div class="LeapMotionInfoBox">
+        <div id="infoLeap"></div>
+    </div>
+
+    <!-- 오디오 정보영역 -->
+    <audio id='voiceAudio' autoplay onended="nextPlay()">
+        <source src="./voice/4.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Album기능 Modal -->
+    <div id="modal-album" class="modal" data-modal>
+        <!-- Swiper -->
+        <div class="swiper-container gallery-top">
+            <div class="swiper-wrapper">
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next swiper-button-white"></div>
+            <div class="swiper-button-prev swiper-button-white"></div>
+        </div>
+        <div class="swiper-container gallery-thumbs">
+            <div class="swiper-wrapper">
+            </div>
+        </div>
+        <br>
+        <!--item 중앙정렬하는 div *Jay-->
+        <div style="text-align: center; max-width: 0auto; margin-bottom: 2px;">
+            <!-- 슬라이드쇼(나만의 Preview) 모달 오픈 버튼 *Jay-->
+            <a href="#modal-slideshow" class="slideshow-btn">
+                <div class="btn-large">Slide Show</div>
+            </a>
+            <!-- current slide(gallery-top class의 현재 슬라이드) 삭제 버튼 *Jay-->
+            <a href="#" class="remove-slide" onclick="removeSlide()">
+                <div class="btn-large">Remove Slide</div>
+            </a>
+            <br><br>
+        </div>
+    </div>
+
+    <!-- Slideshow(나만의 Preview)기능 Modal -->
+    <div id="modal-slideshow" class="modal" data-modal>
+        <!-- Swiper -->
+        <div class="swiper-container slideshow">
+            <div class="swiper-wrapper">
+            </div>
+        </div>
+
+        <div style="text-align: center; max-width: 0auto;">
+            <!-- 최종적으로 관리된 슬라이드쇼 상태를 저장하는 버튼 -->
+            <a href="#" class="download-btn" onclick="download_images()">
+                <div class="btn-large">DOWNLOAD</div>
+            </a>
+            <!-- slideshow Close 버튼 (escape, click기능 X이므로, 해당 버튼으로만 모달 Close 가능) -->
+            <a href="#modal-slideshow" class="close-slide" rel="modal:close">
+                <div class="btn-large">CLOSE</div>
+            </a>
+            <br><br><br>
+        </div>
+    </div>
+
+
+
+    <!-- SCRIPT 구문 -->
+    <script type="text/javascript" src="js/leap-0.6.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+
+    <script type="text/javascript" src="./libs/_osl/dash/dash.all.min.js"></script>
+    <script type="text/javascript" src="./libs/_osl/videojs/video.min.js"></script>
+    <script type="text/javascript" src="./libs/_osl/videojsPlugin/videojs-dash.min.js"></script>
+
+    <script type="text/javascript" src="./js/cePlayer.js"></script>
+    <script type="text/javascript" src="./js/ce-core-plugin.js"></script>
+
+    <script type="text/javascript" src="./js/sound.js"></script>
+    <script type="text/javascript" src="./js/LeapPlay.js"></script>
+    <script type="text/javascript" src="./js/Canvas.js"></script>
+    <script type="text/javascript" src="./js/LeapMotionInformation.js"></script>
+    <script type="text/javascript" src="./js/PlayerMotion.js"></script>
+    <script type="text/javascript" src="./js/leapController.js"></script>
+
+    <script type="text/javascript" src="./js/jquery.toast.js"></script>
+
+    <script type="text/javascript" src="js/jquery.modal.min.js"></script>
+    <script type="text/javascript" src="js/swiper.min.js"></script>
+    <script type="text/javascript" src="js/snapshot_control.js"></script>
+
+    <script>
+        var leapPlay = new LeapPlay(); // 프레임을 관리하는 최상위 객체 선언
+        var canvas = new Canvas("CONTENTS", "leap-overlay"); // 손을 그려주는 역할을 하는 객체 선언
+        var playerMotion = new PlayerMotion("CONTENTS"); // 모션 정보 객체 선언
+        var snap = new Snapshot("CONTENTS"); // 스냅샷을 관리하는 객체 선언
+        var leapMotionInformation = new LeapMotionInformation("infoLeap", "CONTENTS"); // 립모션 정보를 관리하는 객체 선언
+        leapMotionInformation.outputLeapInfoText(); // 립모션 상태 창
+        leapMotionInformation.leapConnectionInfo(leapMotionInformation); // 립모션 연결상태 표시
+        soundControll.initSound(); //sound 음원 코드 초기화 설정
+
+        // leap motion 루프(leap.loop) 조건 변수
+        var Video_Start2End = false; // 영상의 시작부터 끝날 때까지만 인터랙션 작동
+        var Leap_Work_Toggle = false; // 영상 하단의 toggle에 따라 인터랙션 작동 여부 제어
+        var modal_album_onoff = false; // 상황에 따라 일부 인터랙션 차단
+        var modal_slide_onoff = false;
+
+        // Swiper Initialize : Jay 
+        var galleryThumbs = new Swiper('.gallery-thumbs', {
+            slidesPerView: 4,
+            spaceBetween: 20,
+            keyboard: {
+                enabled: true,
+            },
+            centeredSlides: true,
+            centerInsufficientSlides: true,
+            watchSlidesVisibility: true,
+            watchSlidesProgress: true,
+        });
+
+
+        var galleryTop = new Swiper('.gallery-top', {
+            spaceBetween: 50,
+            keyboard: {
+                enabled: true,
+            },
+            preloadImages: true,
+            centeredSlides: true,
+            watchSlidesVisibility: true,
+            watchSlidesProgress: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            thumbs: {
+                swiper: galleryThumbs
+            }
+        });
+
+
+        var slideshow = new Swiper('.slideshow', {
+            effect: 'fade',
+            // centeredSlides: true,
+            autoplay: {
+                delay: 1600,
+                disableOnInteraction: false,
+            },
+            speed: 3000,
+            loop: true
+        });
+
+
+
+
+
+        //////////////////////////////////////////////////
+        //  <!-- 동영상 관련 정보 로딩 스크립트 *Jay -->  //  
+        /////////////////////////////////////////////////
+
+        // JSON 데이터 로드
+        function testCheck(type) {
+            $("#CONTENTS").ceplayer({
+                fit: true,
+                interactive: './project_0' + type + '/branch_data.json'
+            });
+        }
+
+        //09.28  + 190731,PresentJay : 영상 재생시 안내음성 관리 + Video_Start2End 관리 기능 병합
+        function playVideo() {
+            document.getElementById('voiceAudio').pause();
+            Video_Start2End = true;
+            console.log("video start@");
+        }
+
+        function nextPlay() {
+            document.getElementById('voiceAudio').src = "./voice/3.mp3";
+            var media = document.getElementById('voiceAudio');
+            media.currentTime = 0;
+            media.onended = null;
+            media.play();
+        }
+
+
+        testCheck(parent.getplayCount());
+        console.log("video in load success");
+        console.log("Ready to LEAP MOTION");
+
+        // 루프를 통해 frame 단위로 립모션 작업 실행.
+        Leap.loop(function (frame) {
+            if (Video_Start2End && Leap_Work_Toggle && !modal_slide_onoff) {
+                canvas.leapMotion_Control(frame);
+            }
+        });
+
+
+        //////////////////////////////
+        //  <-- 스냅샷 스크립트 -->  //
+        //////////////////////////////
+
+        function DoSnapshot() {
+            snap.shoot(1280, 720);
+            galleryThumbs.appendSlide('<div class="swiper-slide"><img src="' + snap.getLastitem() + '"></div>');
+            galleryTop.appendSlide('<div class="swiper-slide"><img src="' + snap.getLastitem() + '"></div>');
+            slideshow.appendSlide('<div class="swiper-slide"><img src="' + snap.getLastitem() + '"></div>');
+            toast("capture");
+        }
+
+
+        //////////////////////////////////
+        //  <!-- 앨범 단위 스크립트 -->  //
+        /////////////////////////////////
+
+        // 앨범 오픈 함수
+        function openAlbum() {
+            toast("openAlbum");
+            $("#modal-album").modal({
+                closeExisting: false
+            });
+            galleryThumbs.update();
+            galleryTop.update();
+
+            globalPlayer.pause();
+            modal_album_onoff = true;
+            console.log("Album open");
+        }
+
+        // 앨범 종료 함수
+        function closeAlbum() {
+            $.modal.close();
+        }
+
+        // esc키, 버튼, 립모션 등 다양한 방법에 의해 종료 때문에 추가.
+        $('#modal-album').on($.modal.BEFORE_CLOSE, function (event, modal) {
+            toast("closeAlbum");
+            console.log("Album close");
+            modal_album_onoff = false;
+        });
+
+        // 슬라이드 제거 함수
+        function removeSlide() {
+            var currentSlide = galleryTop.activeIndex;
+            galleryThumbs.removeSlide(currentSlide);
+            galleryTop.removeSlide(currentSlide);
+            slideshow.removeSlide(currentSlide);
+            snap.remove(currentSlide);
+            toast("remove");
+        }
+
+        // 이전 이미지 이동 함수
+        function nextImg() {
+            toast("nextImg");
+            galleryThumbs.slideNext();
+            galleryTop.slideNext();
+        }
+
+        // 다음 이미지 이동 함수
+        function previousImg() {
+            toast("previousImg");
+            galleryThumbs.slidePrev();
+            galleryTop.slidePrev();
+        }
+
+
+
+
+
+
+        ///////////////////////////////////////
+        //  <!-- 슬라이드쇼 관련 스크립트 -->  //
+        ///////////////////////////////////////
+
+        document.querySelector('.slideshow-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+            $("#modal-slideshow").modal({
+                closeExisting: false,
+                showClose: false,
+                escapeClose: false
+            });
+            slideshow.update();
+            slideshow.autoplay.stop();
+            slideshow.autoplay.start();
+            modal_slide_onoff = true;
+        });
+
+        $('#modal-slideshow').on($.modal.BEFORE_CLOSE, function (event, modal) {
+            modal_slide_onoff = false;
+        });
+
+
+
+        ////////////////////////////////////////
+        //  <!-- 토글/토스트 관련 스크립트 -->  //
+        ////////////////////////////////////////
+
+        // YBNML : 토글에 따라 인터랙션 작동 차단  + Jay : 코드 간소화 (190731)
+        function toggle() {
+            Leap_Work_Toggle ? Leap_Work_Toggle = false : Leap_Work_Toggle = true;
+        }
+
+        // toast process
+        function toast(msg) {
+            switch (msg) {
+                case "capture":
+                    $.toast('<img src="' + snap.getLastitem() + '"><h1>Capture</h1>', {
+                        type: 'info',
+                        duration: 1000
+                    });
+                    break;
+                case "openAlbum":
+                    $.toast('<h1>Open Album</h1>', {
+                        type: 'success',
+                        duration: 1000
+                    });
+                    break;
+                case "closeAlbum":
+                    $.toast('<h1>Close Album</h1>', {
+                        type: 'success',
+                        duration: 1000
+                    });
+                    break;
+                case "previousImg":
+                    $.toast('<h1>Previous Image</h1>', {
+                        type: 'success',
+                        duration: 1000
+                    });
+                    break;
+                case "nextImg":
+                    $.toast('<h1>Next Image</h1>', {
+                        type: 'success',
+                        duration: 1000
+                    });
+                    break;
+                case "remove":
+                    $.toast('<h1>Remove</h1>', {
+                        type: 'danger',
+                        duration: 1000
+                    });
+                    break;
+            }
+        };
+
+
+
+        //////////////////////////////////////
+        //  <!-- 다운로드 관련 스크립트 -->  //
+        /////////////////////////////////////
+
+        function download_images() {
+            var t = new Date();
+            var month = (t.getMonth() + 1) > 9 ? (t.getMonth() + 1).toString() : '0' + (t.getMonth() + 1).toString();
+            var date = t.getDate() > 9 ? t.getDate().toString() : '0' + t.getDate().toString();
+            var hour = t.getHours() > 9 ? t.getHours().toString() : '0' + t.getHours().toString();
+            var minute = t.getMinutes() > 9 ? t.getMinutes().toString() : '0' + t.getMinutes().toString();
+            var dirname = t.getFullYear().toString().slice(2, 4) + '-' + month + '-' + date + '(' + hour + minute +
+                ')_MyPreview';
+
+            var fileIndex = 0;
+            var interval = setInterval(function () {
+                if (fileIndex < snap.getLength()) {
+                    try {
+                        var save = document.createElement('a');
+                        save.target = '_blank';
+                        save.href = snap.snapshots[fileIndex];
+                        save.download = dirname + (fileIndex + 1) + '.png';
+                        save.click();
+                        fileIndex++;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                } else {
+                    clearInterval(interval);
+                }
+            }, 100);
+
+        }
+    </script>
+
+</body>
+
+</html>
