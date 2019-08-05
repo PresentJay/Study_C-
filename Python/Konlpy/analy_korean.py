@@ -7,7 +7,7 @@ from konlpy.tag import Kkma
 #from openpyxl import *
 
 root = Tk()
-root.title("품사태깅 _PresentJay")
+root.title("품사태깅_")
 root.resizable(False, False)
 
 
@@ -19,10 +19,11 @@ def File_selection():
     load_wb = load_workbook(root.filename, data_only=True)
     load_ws = load_sheet
 
-def analysis(source, dst):
-    dstlen= len(dst.get())-1
-    dst.delete(0, dstlen)
-    dst.insert(0, kkma.pos(source))
+def analysis(source, result):
+    tmpstr = kkma.pos(analysis.get('1.0', 'end-1c'))
+    for i in range(0, len(tmpstr), 1):
+        tmpstr[i]='/'.join(tmpstr[i])
+    tmpstr = ' + '.join(tmpstr)
     
     
 def main_():
@@ -44,6 +45,7 @@ def Indivisual_Analysis():
         messagebox.askokcancel("Alert", "분석을 진행할까요?")
         messagebox.showinfo("Alert", '품사태깅 시작')
         tmpstr = kkma.pos(analysis.get('1.0', 'end-1c'))
+        
         resultbox.delete('1.0', END)
         for i in range(0, len(tmpstr), 1):
             tmpstr[i]='/'.join(tmpstr[i])
