@@ -4,7 +4,7 @@ from tkinter import filedialog
 import tkinter.scrolledtext as tkst
 import tkinter.ttk
 from konlpy.tag import Kkma
-#from openpyxl import *
+from openpyxl import load_workbook, Workbook
 
 root = Tk()
 root.title("품사태깅")
