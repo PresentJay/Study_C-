@@ -7,7 +7,7 @@ from konlpy.tag import Kkma
 #from openpyxl import *
 
 root = Tk()
-root.title("품사태깅")
+root.title("품사태깅 _PresentJay")
 root.resizable(False, False)
 
 kkma = Kkma()
@@ -27,13 +27,7 @@ def main_():
     else:
         messagebox.showinfo("Alert", StartNum.get()+'번에서 '+ EndNum.get()+'번까지의 품사태깅을 시작합니다.')
         File_selection()
-
-def Analysis_(src):
-    tmpstr = kkma.pos(src)
-    for i in range(0, len(tmpstr), 1):
-        tmpstr[i]='/'.join(tmpstr[i])
-    tmpstr = ' + '.join(tmpstr)
-    return tmpstr
+        
 
 def Indivisual_Analysis():
     if (analysis.get('1.0', 'end-1c')==''):
@@ -44,8 +38,11 @@ def Indivisual_Analysis():
         #root.wait_window() # Prevent clicking root while messagebox is open
         if ans:
             messagebox.showinfo("Alert", '품사태깅 시작')
-            tmpstr = Analysis_(analysis.get('1.0', 'end-1c'))
+            tmpstr = kkma.pos(analysis.get('1.0', 'end-1c'))
             resultbox.delete('1.0', END)
+            for i in range(0, len(tmpstr), 1):
+                tmpstr[i]='/'.join(tmpstr[i])
+            tmpstr = ' + '.join(tmpstr)
             resultbox.insert('1.0', tmpstr)
             messagebox.showinfo('Finish!', '완료되었습니다!')
 
