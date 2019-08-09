@@ -4,7 +4,6 @@ import tkinter.scrolledtext as tkst
 import tkinter.ttk
 from konlpy.tag import Kkma
 from openpyxl import *
-import numpy.core.multiarray
 
 #tkinter 기본설정
 root = Tk()
