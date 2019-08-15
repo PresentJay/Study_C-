@@ -106,6 +106,7 @@ def Indivisual_Analysis():  #프로그램 하단부의 개별 문장분석부
             resultbox.insert('1.0', tmpstr)
             messagebox.showinfo('Finish!', '완료되었습니다!')
             #작업 종료 이후, resultbox 내부 텍스트 전체 블록상태로 만드는 update 필요 (그러나 자료조사 결과, scrolledText에서 블록기능을 찾기 힘듬)
+#...
 
 
 #tkinter GUI setting
