@@ -3,7 +3,8 @@ from tkinter import messagebox, filedialog
 import tkinter.scrolledtext as tkst
 import tkinter.ttk
 from konlpy.tag import Kkma
-from openpyxl import *
+
+#from openpyxl import *
 
 #tkinter 기본설정
 root = Tk()
@@ -96,10 +97,10 @@ def Indivisual_Analysis():  #프로그램 하단부의 개별 문장분석부
         messagebox.showinfo('경고','개별 분석할 문장을 기입해주세요!')
     else:
         #root.grab_set() # Prevent clicking root while messagebox is open :  modal형 동작을 위한 구문 / test 필요하나, 굳이 쓸만한 기능은 아님
-        if (resultbox.get('1.0', 'end-1c')!=''):
-            ans = messagebox.askyesno('데이터 감지', '진행하시면 기존 결과값이 사라집니다!')
+        #if (resultbox.get('1.0', 'end-1c')!=''):
+           # ans = messagebox.askyesno('데이터 감지', '진행하시면 기존 결과값이 사라집니다!')
         #root.wait_window() # Prevent clicking root while messagebox is open
-        if ans:
+        #if ans:
             messagebox.showinfo("Alert", '품사태깅 시작')
             tmpstr = Analysis_(analysis.get('1.0', 'end-1c'))
             resultbox.delete('1.0', END)
@@ -143,7 +144,7 @@ analysis_ = Label(root, text="개별 분석할 문장").grid(row=11, columnspan=
 root.grid_rowconfigure(12, minsize=80)
 analysis = tkst.ScrolledText(root, width=30, height=3)
 analysis.grid(row=12, columnspan=2, sticky=W+E+N+S)
-analysis.focus_set() 
+analysis.focus_set()
 indiv_do_btn = Button(root, text='분석', command=Indivisual_Analysis)
 indiv_do_btn.grid(row=13, columnspan=2, sticky=W+E)
 resultbox = tkst.ScrolledText(root, width=30, height=3)
