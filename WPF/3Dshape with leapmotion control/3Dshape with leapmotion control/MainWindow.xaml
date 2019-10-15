@@ -6,43 +6,91 @@
         xmlns:local="clr-namespace:_3Dshape_with_leapmotion_control"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Viewport3D Name="viewport3D1">
-            <Viewport3D.Camera>
-                <PerspectiveCamera x:Name="camMain" Position="6 5 4" LookDirection="-6 -5 -4"></PerspectiveCamera>
-            </Viewport3D.Camera>
-            <ModelVisual3D>
-                <ModelVisual3D.Content>
-                    <DirectionalLight x:Name="dirLightMain" Direction="-1, -1, -1"></DirectionalLight>
-                </ModelVisual3D.Content>
-            </ModelVisual3D>
-            <ModelVisual3D x:Name="MyModel">
-                <ModelVisual3D.Content>
-                    <GeometryModel3D>
-                        <GeometryModel3D.Geometry>
-                            <MeshGeometry3D x:Name="meshMain"
-                                            Positions="0 0 0    1 0 0   0 1 0   1 1 0   0 0 1   1 0 1   0 1 1   0 1 1"
-                                            TriangleIndices="2 3 1  3 1 0   7 1 3   7 5 1   6 5 7   6 4 5   6 2 0   2 0 4   2 7 3   2 6 7   0 1 5    0 5 4"></MeshGeometry3D>
-                        </GeometryModel3D.Geometry>
-                        <GeometryModel3D.Material>
-                            <DiffuseMaterial x:Name="matDiffuseMain">
-                                <DiffuseMaterial.Brush>
-                                    <SolidColorBrush Color="Red"/>
-                                </DiffuseMaterial.Brush>
-                            </DiffuseMaterial>
-                        </GeometryModel3D.Material>
-                    </GeometryModel3D>
-                </ModelVisual3D.Content>
-                <ModelVisual3D.Transform>
-                    <RotateTransform3D>
-                        <RotateTransform3D.Rotation>
-                            <AxisAngleRotation3D x:Name="rotate" Axis="0 1 0"/>
-                        </RotateTransform3D.Rotation>
-                    </RotateTransform3D>
-                </ModelVisual3D.Transform>
-            </ModelVisual3D>
-        </Viewport3D>
 
-        <Slider Height="23" HorizontalAlignment="Left" Margin ="240,348,0,0"  Name="slider1"   VerticalAlignment="Top" Width="269" Maximum="360" Value="{Binding ElementName=rotate, Path=Angle}"/>
+    <Grid>
+
+        <DockPanel Width="auto" VerticalAlignment="Stretch" Height="Auto" HorizontalAlignment="Stretch" Grid.ColumnSpan="1" Grid.Column="0" Grid.Row="0" Margin="0,0,0,0" Grid.RowSpan="1">
+            <StackPanel>
+                <StackPanel.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Color="White" Offset="0"/>
+                        <GradientStop x:Name="GradColor" Color="{Binding Path=Color, ElementName=ColorBrush}" Offset=".3"/>
+                        <GradientStop Color="AliceBlue" Offset=".7"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+                <StackPanel Margin="10" Width="110">
+                    <TextBlock Text="Light Position" HorizontalAlignment="Center"/>
+                    <TextBlock Text="X      Y      Z" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBox Name="lightX_TB" MaxLength="5" HorizontalAlignment="Left" Text="{Binding ElementName=light, Path=Direction.X}" Margin="0,0,15,0" TextChanged="Light_TextChanged"/>
+                        <TextBox Name="lightY_TB" MaxLength="5" HorizontalAlignment="Left" Text="{Binding ElementName=light, Path=Direction.Y}" Margin="0,0,15,0" TextChanged="Light_TextChanged"/>
+                        <TextBox Name="lightZ_TB" MaxLength="5" HorizontalAlignment="Left" Text="{Binding ElementName=light, Path=Direction.Z}" TextChanged="Light_TextChanged" />
+                    </StackPanel>
+                    <Separator/>
+                    <Separator/>
+                    <!-- buttons -->
+                    <TextBlock Text="Color" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="R" HorizontalAlignment="Center"/>
+                        <Slider x:Name="RV" Width="80" HorizontalAlignment="Stretch" Maximum="255" Minimum="0" Value="{Binding Path=Color.R, ElementName=ColorBrush}" ValueChanged="ValueChanged"/>
+                        <TextBlock Text="{Binding Path=Value, ElementName=RV}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="G" HorizontalAlignment="Center"/>
+                        <Slider x:Name="GV" Width="80" HorizontalAlignment="Stretch" Maximum="255" Minimum="0" Value="{Binding Path=Color.G, ElementName=ColorBrush}" ValueChanged="ValueChanged" />
+                        <TextBlock Text="{Binding Path=Value, ElementName=GV}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="B" HorizontalAlignment="Center"/>
+                        <Slider x:Name="BV" Width="80" HorizontalAlignment="Stretch" Maximum="255" Minimum="0" Value="{Binding Path=Color.B, ElementName=ColorBrush}"  ValueChanged="ValueChanged"/>
+                        <TextBlock Text="{Binding Path=Value, ElementName=BV}"/>
+                    </StackPanel>
+                    <Separator/>
+                    <TextBlock Text="x rotate" HorizontalAlignment="Center"/>
+                    <Slider x:Name="xSlider" Width="100" HorizontalAlignment="Stretch" Maximum="360" Value="{Binding Path=Angle, ElementName=rotate}" ValueChanged="XSlider_ValueChanged" />
+                    <Separator/>
+                    <TextBlock Text="y rotate" HorizontalAlignment="Center"/>
+                    <Slider x:Name="ySlider" Width="100" HorizontalAlignment="Stretch" Maximum="360" Value="{Binding Path=Angle, ElementName=rotate}" ValueChanged="YSlider_ValueChanged" />
+                    <Separator/>
+                    <TextBlock Text="z rotate" HorizontalAlignment="Center"/>
+                    <Slider x:Name="zSlider" Width="100" HorizontalAlignment="Stretch" Maximum="360" Value="{Binding Path=Angle, ElementName=rotate}" ValueChanged="ZSlider_ValueChanged" />
+                </StackPanel>
+            </StackPanel>
+            <Viewport3D Name="mainViewport" ClipToBounds="True">
+                <Viewport3D.Camera>
+                    <PerspectiveCamera FarPlaneDistance="100" LookDirection="-9,-8,-10" UpDirection="0,1,0" NearPlaneDistance="2" Position="9,8,10" FieldOfView="20" />
+                </Viewport3D.Camera>
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <Model3DGroup>
+                            <DirectionalLight x:Name="light" Color="White" Direction="0,-1,-1"/>
+                            <GeometryModel3D>
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D x:Name="cubeMesh"
+                                                    Positions="0 0 0  1 0 0   1 0 1   0 0 1   0 1 0   1 1 0   1 1 1   0 1 1"
+                                                    TriangleIndices="3,2,6 3,6,7 2,1,5 2,5,6 1,0,4 1,4,5 0,3,7 0,7,4 7,6,5 7,5,4 2,3,0 2,0,1">
+                                    </MeshGeometry3D>
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial x:Name="DiffuseMain">
+                                        <DiffuseMaterial.Brush>
+                                            <SolidColorBrush Color="White" x:Name="ColorBrush"/>
+                                        </DiffuseMaterial.Brush>
+                                    </DiffuseMaterial>
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                        </Model3DGroup>
+                    </ModelVisual3D.Content>
+                    <ModelVisual3D.Transform>
+                        <RotateTransform3D>
+                            <RotateTransform3D.Rotation>
+                                <AxisAngleRotation3D x:Name="rotate" Axis= "0 1 0" />
+                            </RotateTransform3D.Rotation>
+                        </RotateTransform3D>
+                    </ModelVisual3D.Transform>
+                </ModelVisual3D>
+            </Viewport3D>
+        </DockPanel>
     </Grid>
 </Window>
