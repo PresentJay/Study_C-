@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_3Dshape_with_leapmotion_control"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="20143174 meshmodeling learn proj" Height="450" Width="800">
 
     <Grid>
 
@@ -27,8 +27,7 @@
                         <TextBox Name="lightY_TB" MaxLength="5" HorizontalAlignment="Left" Text="{Binding ElementName=light, Path=Direction.Y}" Margin="0,0,15,0" TextChanged="Light_TextChanged"/>
                         <TextBox Name="lightZ_TB" MaxLength="5" HorizontalAlignment="Left" Text="{Binding ElementName=light, Path=Direction.Z}" TextChanged="Light_TextChanged" />
                     </StackPanel>
-                    <Separator/>
-                    <Separator/>
+                    <Separator Margin="0,10,0,10"/>
                     <!-- buttons -->
                     <TextBlock Text="Color" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal">
@@ -46,15 +45,16 @@
                         <Slider x:Name="BV" Width="80" HorizontalAlignment="Stretch" Maximum="255" Minimum="0" Value="{Binding Path=Color.B, ElementName=ColorBrush}"  ValueChanged="ValueChanged"/>
                         <TextBlock Text="{Binding Path=Value, ElementName=BV}"/>
                     </StackPanel>
-                    <Separator/>
+                    <Separator Margin="0,10,0,10"/>
                     <TextBlock Text="x rotate" HorizontalAlignment="Center"/>
                     <Slider x:Name="xSlider" Width="100" HorizontalAlignment="Stretch" Maximum="360" Value="{Binding Path=Angle, ElementName=rotate}" ValueChanged="XSlider_ValueChanged" />
-                    <Separator/>
+                    <Separator Margin="0,10,0,10"/>
                     <TextBlock Text="y rotate" HorizontalAlignment="Center"/>
                     <Slider x:Name="ySlider" Width="100" HorizontalAlignment="Stretch" Maximum="360" Value="{Binding Path=Angle, ElementName=rotate}" ValueChanged="YSlider_ValueChanged" />
-                    <Separator/>
+                    <Separator Margin="0,10,0,10"/>
                     <TextBlock Text="z rotate" HorizontalAlignment="Center"/>
                     <Slider x:Name="zSlider" Width="100" HorizontalAlignment="Stretch" Maximum="360" Value="{Binding Path=Angle, ElementName=rotate}" ValueChanged="ZSlider_ValueChanged" />
+                    <Separator Margin="0,10,0,10"/>
                 </StackPanel>
             </StackPanel>
             <Viewport3D Name="mainViewport" ClipToBounds="True">
