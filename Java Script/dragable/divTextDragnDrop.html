@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <style>
+            .div1{
+                width:100%;
+                padding: 10px;
+                border:1px solid #999;
+            }
+
+            .item{
+                display: inline-block;
+                width: auto;
+                border: 0.5px solid #000000;
+                margin-right: 5px;
+                user-select: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container" class="div1">
+            <div id="fa" class="item" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
+                아버지
+            </div>
+            <div id="room" class="item" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
+                방
+            </div>
+            <div id="enter" class="item" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
+                들어가다
+            </div>
+        </div>
+        
+        <script>
+            function allowDrop(ev){
+                console.log("Target is " + ev.target.id);
+                ev.preventDefault();
+            }
+            function drag(ev){
+                ev.dataTransfer.setData("Text", ev.target.id);
+                console.log(ev.target.id + " start." );
+            }
+            function drop(ev){
+                ev.preventDefault();
+                document.getElementById(ev.target.id).innerText += " " + document.getElementById(ev.dataTransfer.getData("Text")).innerText;
+                document.getElementById("container").removeChild(document.getElementById(ev.dataTransfer.getData("Text")));
+                console.log(ev.dataTransfer.id + " is dragged and dropped to " + ev.target.id );
+            }
+        </script>
+
+    </body>
+</html>
