@@ -1,6 +1,6 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,700);
+/* @import url(https://fonts.googleapis.com/css?family=Raleway:300,700);
 @import url(https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css);
-@import url(https://fonts.googleapis.com/css?family=Raleway);
+@import url(https://fonts.googleapis.com/css?family=Raleway); */
 
 html, body
 {
@@ -39,7 +39,7 @@ div.container
     font-family: Raleway;
     margin: 0 auto;
 	padding: 10em 3em;
-	text-align: center;
+	text-align: left;
 }
 
 div.container a
