@@ -1,0 +1,15 @@
+2019_03_27
+닷넷 4주차
+
+1. 실습과제(지난주 Curve를 Randomized Color, Randomized Width를 추가한 자료형으로 구현)
+
+
+2. 776p. 라디오버튼, 컨트롤 파트 참고
+
+3. CheckRadio 
+
+4. 상속 (업,다운캐스팅)관련 개념 확인 -> 멀티 라디오버튼 컨트롤을 통한 변수변경
+
+5. 781p. RadioChanged 이벤트 (라디오체인지 함수의 통합)
+
+6. 컨트롤 text를 바꾸고 싶은 값으로 두고, int.Parse((RadioButton)sender).Text()); 으로 작업하면 훨씬 깔끔!!
