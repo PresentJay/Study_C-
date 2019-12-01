@@ -2,8 +2,7 @@ var randomColor = function (weight) {
     return colors[Math.floor(Math.random() * colors.length)][weight];
 };
 
-
-document.addEventListener("DOMContentLoaded", function () {
+var NewSlide = function() {
 
     var canvas = new draw2d.Canvas("gfx_holder");
 
@@ -143,8 +142,11 @@ document.addEventListener("DOMContentLoaded", function () {
         x: 20,
         y: 20
     });
-    canvas.add(msg);
+    // canvas.add(msg);
 
-    // add_msg("test");
-});
+    add_msg(20,20,"test");
+
+}
+
+
 
