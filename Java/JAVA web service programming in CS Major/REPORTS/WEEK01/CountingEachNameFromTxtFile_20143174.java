@@ -10,10 +10,9 @@ public class CountingEachNameFromTxtFile_20143174 {
     public static void main(String[] args) {
         try {
 
-            System.out.println(new File(".").getAbsolutePath());
-
             // Create a File Object (from java.io.File)
-            File f = new File("info.txt");
+            File f = new File(
+                    "d:/Programming Study/Study_Languages/Java/JAVA web service programming in CS Major/REPORTS/WEEK01/info.txt");
             // Create a Input-Stream (from java.io.FileReader)
             FileReader r = new FileReader(f);
 
