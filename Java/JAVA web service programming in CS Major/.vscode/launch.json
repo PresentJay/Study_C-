@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-CountingEachNameFromTxtFile_20143174<JAVA web service programming in CS Major_79558da5>",
+            "request": "launch",
+            "mainClass": "REPORTS.WEEK01.CountingEachNameFromTxtFile_20143174",
+            "projectName": "JAVA web service programming in CS Major_79558da5"
+        }
+    ]
+}
