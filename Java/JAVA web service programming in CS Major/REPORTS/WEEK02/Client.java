@@ -43,7 +43,7 @@ public class Client {
             // 이후 이름 매칭을 통해 출력하는 작업을 원하는 만큼 반복합니다.
             while (infiniteRequest())
 
-            socket.close();
+                socket.close();
         } catch (IOException e) {
             System.out.println("Client : Input/Output error.");
             e.getStackTrace();
