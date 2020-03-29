@@ -33,7 +33,7 @@ public class CountingEachNameFromTxtFile_20143174 {
             // tmp_line에 버퍼리더의 데이터를 넘겨줍니다.
             while ((tmp_line = in.readLine()) != null) {
                 // core 변수에 버퍼리더 데이터에서 줄바꿈을 기준으로 split합니다.
-                core = tmp_line.replace("|*|", " ").split(" ");
+                core = tmp_line.split(" ");
                 // split된 core는 raw의 각 이름(cnt의 카운팅 기준)이 됩니다.
                 for (int i = 0; i < core.length; i++)
                     if (core[i].length() != 0)
